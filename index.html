@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SpeakIt | CreatorHub Application</title>
+<style>
+:root{color-scheme:dark;--bg:#100d1c;--panel:#1b1630;--purple:#9b7bff;--text:#f7f4ff;--muted:#bcb4d4}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;padding:28px 16px;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(circle at top,#2b1d4d,var(--bg) 55%);color:var(--text)}
+main{max-width:720px;margin:0 auto}header{text-align:center;margin:10px 0 26px}.brand{font-size:13px;letter-spacing:.28em;text-transform:uppercase;color:#c7b5ff;font-weight:800}.logo{display:inline-grid;place-items:center;width:54px;height:54px;border-radius:17px;background:linear-gradient(135deg,#b49aff,#7251db);font-size:26px;font-weight:800;margin-top:12px}
+h1{margin:12px 0 6px;font-size:clamp(30px,6vw,42px)}header p{color:var(--muted)}.panel{background:rgba(27,22,48,.96);border:1px solid #40345f;border-radius:22px;padding:24px;box-shadow:0 18px 55px #0004}
+h2{margin-top:0;font-size:21px}.notice{border:1px solid #574582;background:#261d40;border-radius:12px;padding:12px 14px;color:#e6dcff;font-size:14px;line-height:1.5;margin-bottom:20px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}label{display:block;font-weight:650;font-size:14px;margin-bottom:7px}
+input,select,textarea{width:100%;border:1px solid #51456d;border-radius:11px;background:#100d1c;color:var(--text);padding:12px;font:inherit;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--purple);box-shadow:0 0 0 3px #9b7bff22}.field{margin-bottom:16px}textarea{min-height:105px;resize:vertical}
+.check{display:flex;gap:10px;align-items:flex-start;font-weight:450;line-height:1.45;color:#e4def4;margin:13px 0}.check input{width:auto;margin-top:4px;accent-color:var(--purple)}
+button{width:100%;border:0;border-radius:12px;padding:14px 18px;margin-top:10px;color:white;font-size:16px;font-weight:750;background:linear-gradient(100deg,#8863ed,#b06cf5);cursor:pointer}
+button:disabled{opacity:.65;cursor:wait}.success{display:none;text-align:center;padding:24px 10px}.success .checkmark{font-size:46px;color:#c4aaff}.success h2{font-size:28px;margin:12px 0}.success p{line-height:1.65;color:#e5def6}.success .small{color:var(--muted);font-size:13px}
+footer{text-align:center;color:var(--muted);font-size:12px;line-height:1.5;padding:18px 8px}.honeypot{position:absolute;left:-5000px}
+@media(max-width:560px){.grid{grid-template-columns:1fr;gap:0}.panel{padding:19px}}
+</style>
+
+<style>
+.help-launcher{position:fixed;right:20px;bottom:20px;z-index:1000;display:flex;align-items:center;gap:10px;border:1px solid #d8c6ff55;border-radius:999px;padding:10px 15px 10px 10px;background:linear-gradient(110deg,#bba3ff,#efaceb);color:#1a102b;font:800 13px system-ui,sans-serif;box-shadow:0 12px 36px #0008;cursor:pointer}
+.help-launcher:hover{filter:brightness(1.07);transform:translateY(-2px)}
+.help-launcher-icon{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#1d1430;color:#e6d9ff;font-size:18px}
+.help-panel{position:fixed;right:20px;bottom:84px;width:min(360px,calc(100vw - 28px));max-height:min(540px,calc(100vh - 120px));z-index:1001;display:none;flex-direction:column;overflow:hidden;border:1px solid #c8adff44;border-radius:20px;background:#171126;color:#fbf8ff;box-shadow:0 24px 80px #0009;font-family:system-ui,sans-serif}
+.help-panel.open{display:flex}
+.help-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 16px;background:linear-gradient(110deg,#302044,#211630);border-bottom:1px solid #ffffff16}
+.help-head strong{display:block;font-size:14px}.help-head small{color:#c4b6dd;font-size:11px}
+.help-close{border:0;background:#ffffff12;color:#fff;border-radius:9px;width:32px;height:32px;font-size:19px;cursor:pointer}
+.help-body{padding:16px;overflow:auto}
+.help-welcome{font-size:13px;color:#d6cbe8;line-height:1.55;margin:0 0 13px}
+.help-choices{display:grid;gap:8px}
+.help-choice{width:100%;text-align:left;border:1px solid #665180;border-radius:11px;padding:10px 12px;background:#ffffff06;color:#f7f2ff;font:600 12px system-ui,sans-serif;cursor:pointer}
+.help-choice:hover{border-color:#bba3ff;background:#bba3ff12}
+.help-answer{display:none;margin-top:13px;padding:12px;border-radius:12px;background:#a98aff12;border:1px solid #bba3ff33;color:#e9e0fa;font-size:12px;line-height:1.6;white-space:pre-wrap}
+.help-foot{padding:10px 16px;border-top:1px solid #ffffff12;color:#9f91b8;font-size:10px;line-height:1.45}
+@media(max-width:480px){.help-launcher{right:12px;bottom:12px}.help-panel{right:12px;bottom:72px}}
+</style>
+
+</head>
+<body><main>
+<header><div class="brand">SpeakIt</div><div class="logo">C</div><h1>CreatorHub</h1><p>Apply to join our creator community.</p></header>
+<section class="panel">
+<div id="application">
+<h2>Creator application</h2>
+<div class="notice"><strong>Eligibility:</strong> Applicants must be at least 13 years old and have at least 10 followers. Be respectful, protect private information, and only submit links or content you have permission to share.</div>
+<form id="creator-form" action="https://formsubmit.co/ajax/daviolvcass@gmail.com" method="POST">
+<input type="hidden" name="_subject" value="New SpeakIt / CreatorHub application"><input type="hidden" name="_template" value="table">
+<div class="honeypot" aria-hidden="true"><label>Leave this field empty <input type="text" name="_honey" tabindex="-1" autocomplete="off"></label></div>
+<div class="grid">
+<div class="field"><label for="creator-name">Full name or creator name *</label><input id="creator-name" name="Creator name" required maxlength="80" autocomplete="name"></div>
+<div class="field"><label for="age">Age range *</label><select id="age" name="Age range" required><option value="">Choose age range</option><option value="13–15">13–15</option><option value="16–17">16–17</option><option value="18+">18+</option></select></div>
+</div>
+<div class="field"><label for="email">Your email address *</label><input id="email" name="Applicant email" type="email" required maxlength="150" autocomplete="email" placeholder="you@example.com"></div>
+<div class="grid">
+<div class="field"><label for="platform">Main platform *</label><select id="platform" name="Main platform" required><option value="">Choose platform</option><option>TikTok</option><option>YouTube</option><option>Instagram</option><option>Twitch</option><option>Other</option></select></div>
+<div class="field"><label for="followers">Follower count *</label><input id="followers" name="Follower count" type="number" min="10" step="1" required></div>
+</div>
+<div class="field"><label for="yapper">Yapper username *</label><input id="yapper" name="Yapper username" required maxlength="100" placeholder="@youryappername"></div>
+<div class="field"><label for="handle">Username or public profile link *</label><input id="handle" name="Main platform username or public profile link" required maxlength="250" placeholder="@username or https://..."></div>
+<div class="field"><label for="content">What kind of content do you make? *</label><textarea id="content" name="Content description" required maxlength="1500" placeholder="Tell us about your videos, streams, art, or other content."></textarea></div>
+<div class="field"><label for="why">Why would you like to join CreatorHub?</label><textarea id="why" name="Why join CreatorHub" maxlength="1500"></textarea></div>
+<label class="check"><input type="checkbox" name="Eligibility confirmation" value="Confirmed" required> I confirm that I am at least 13 years old and have at least 10 followers.</label>
+<label class="check"><input type="checkbox" name="Safety rules accepted" value="Accepted" required> I agree to be respectful, avoid harassment, protect personal information, and follow platform rules.</label>
+<label class="check"><input type="checkbox" name="Privacy acknowledgement" value="Acknowledged" required> I understand my answers will be sent to the CreatorHub email address through FormSubmit, a third-party form service. I will not include passwords, home addresses, or other sensitive information.</label>
+<button id="submit-button" type="submit">Send application</button>
+<p id="error" role="alert" style="display:none;color:#ffb6c1"></p>
+</form>
+</div>
+<div class="success" id="success" role="status" aria-live="polite">
+<div class="checkmark">✓</div>
+<h2>Thank You for Applying!</h2>
+<p>Your application has been submitted successfully.</p>
+<p>Our SpeakIt admins will review your application soon. Please check your inbox for updates on whether you’ve been accepted or rejected.</p>
+<p class="small">Thanks for your interest in joining our creator community!</p>
+</div>
+</section>
+<footer>CreatorHub application form. Never share passwords, verification codes, home addresses, or private documents.</footer>
+</main>
+<script>
+const form = document.getElementById('creator-form');
+form.addEventListener('submit', async function(event) {
+  event.preventDefault();
+  const followers = Number(document.getElementById('followers').value);
+  if (!Number.isFinite(followers) || followers < 10) {
+    alert('You need at least 10 followers to apply.');
+    return;
+  }
+  const button = document.getElementById('submit-button');
+  const error = document.getElementById('error');
+  button.disabled = true;
+  button.textContent = 'Sending application…';
+  error.style.display = 'none';
+  try {
+    const response = await fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    });
+    if (!response.ok) throw new Error('Submission service did not accept the application.');
+    document.getElementById('application').style.display = 'none';
+    document.getElementById('success').style.display = 'block';
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  } catch (e) {
+    error.textContent = 'We could not confirm that your application was sent. Please try again in a moment.';
+    error.style.display = 'block';
+    button.disabled = false;
+    button.textContent = 'Send application';
+  }
+});
+</script>
+
+<button class="help-launcher" id="help-launcher" type="button" aria-expanded="false" aria-controls="speakit-help-panel">
+  <span class="help-launcher-icon" aria-hidden="true">✦</span><span>Need help?</span>
+</button>
+<section class="help-panel" id="speakit-help-panel" role="dialog" aria-label="SpeakIt help chat" aria-modal="false">
+  <div class="help-head"><div><strong>SpeakIt Help</strong><small>CreatorHub application assistant</small></div><button class="help-close" id="help-close" aria-label="Close help" type="button">×</button></div>
+  <div class="help-body">
+    <p class="help-welcome">Hi! 👋 I can help with common questions about applying to CreatorHub. Choose a question below.</p>
+    <div class="help-choices">
+      <button class="help-choice" type="button" data-answer="eligibility">What are the requirements?</button>
+      <button class="help-choice" type="button" data-answer="email">Where does my application go?</button>
+      <button class="help-choice" type="button" data-answer="status">How do I check my status?</button>
+      <button class="help-choice" type="button" data-answer="yapper">Why do I need my Yapper username?</button>
+      <button class="help-choice" type="button" data-answer="error">The form won't submit. What should I do?</button>
+    </div>
+    <div class="help-answer" id="help-answer" aria-live="polite"></div>
+  </div>
+  <div class="help-foot">This is an automated FAQ helper, not a live ChatGPT connection. Never send passwords, verification codes, or private information.</div>
+</section>
+<script>
+(function(){
+  const launcher=document.getElementById('help-launcher');
+  const panel=document.getElementById('speakit-help-panel');
+  const close=document.getElementById('help-close');
+  const answer=document.getElementById('help-answer');
+  const replies={
+    eligibility:'You must be at least 13 years old and have at least 10 followers. Fill in all required fields and accept the safety and privacy confirmations.',
+    email:'Applications are configured to be forwarded to the CreatorHub admin email through FormSubmit. The first submission may require confirming the recipient email. Check your spam folder too.',
+    status:'After submitting, the admins need to review your application. The current website can show a submission thank-you message, but a private status inbox for Passed or Rejected requires a secure account and database. Watch the email you entered for updates.',
+    yapper:'Enter your Yapper username so the admins can identify your account. Use your public username only—never provide your password or a verification code.',
+    error:'Check that all required fields are completed, your follower count is at least 10, and your internet connection is working. Try again in a moment. If it still fails, contact the site admin and do not send private account credentials.'
+  };
+  launcher.addEventListener('click',function(){
+    const open=!panel.classList.contains('open');
+    panel.classList.toggle('open',open);
+    launcher.setAttribute('aria-expanded',String(open));
+    if(open) close.focus();
+  });
+  close.addEventListener('click',function(){panel.classList.remove('open');launcher.setAttribute('aria-expanded','false');launcher.focus();});
+  panel.querySelectorAll('[data-answer]').forEach(function(btn){
+    btn.addEventListener('click',function(){answer.textContent=replies[btn.dataset.answer];answer.style.display='block';});
+  });
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&panel.classList.contains('open')){panel.classList.remove('open');launcher.setAttribute('aria-expanded','false');launcher.focus();}});
+})();
+</script>
+
+</body></html>
